@@ -2,6 +2,7 @@
 #include<string.h>      // strlen
 #include<sys/socket.h>
 #include<arpa/inet.h>   // inet_addr
+#include<unistd.h>
 
 /*
 argc and argv are how command line arguments are passed where argc is the
@@ -12,7 +13,7 @@ argc and argv are how command line arguments are passed where argc is the
 int main(int argc, char *argv[]){
   int socket_desc;
   struct sockaddr_in server;
-  char *message                                         // this means that the variable message stores the memory address to a character
+  char *message, server_reply[2000];                                         // this means that the variable message stores the memory address to a character
 
   // Create Socket
   socket_desc = socket(AF_INET, SOCK_STREAM, 0);      // socket() creates a socket and returns a descriptor
@@ -45,6 +46,16 @@ int main(int argc, char *argv[]){
     return 1;
   }
   puts("Data Sent\n");
+
+  // Receive a reply from the server
+  if(recv(socket_desc, server_reply, 2000, 0) < 0) {
+    puts("recv failed");
+  }
+  puts("Reply received\n");
+  puts(server_reply);
+
+  close(socket_desc);
+
   return 0
 
 }
