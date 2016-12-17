@@ -34,17 +34,16 @@ int main(int argc, char *argv[]){
   // Accept incoming connections
   puts("Waiting for incoming connections...");
   c = sizeof(struct sockaddr_in);
-  new_socket = accept(socket_desc, (struct sockaddr *)&client, (socketlen_t*)&c);
+  while ( (new_socket = accept(socket_desc, (struct sockaddr *)&client, (socklen_t*)&c)) ) {
+    puts("Connection accepted");
+    //Reply to the client
+    message = "Hello Client , I have received your connection. But I have to go now, bye\n";
+    write(new_socket , message , strlen(message));
+  }
   if (new_socket<0){
-    perror("Accept failed");
+    perror("Accept failed.");
     return 1;
   }
-  puts("Connection accepted.");
-
-  // Reply to the client
-  message = "Hello! Connection is received!\n";
-  write(new_socket, message, strlen(message));
-
   return 0;
 
 }
